@@ -30,8 +30,8 @@
 
 **Υλικά**
 
-**1.** Eρπυστριοφόρο όχημα
-**2.** Arduino Uno
+-**1.** Eρπυστριοφόρο όχημα
+-**2.** Arduino Uno
 **3.** Αισθητήρες Υπερήχων HC-SR04
 **4.** L298N Dual H-Bridge Motor Driver 
 **5.** GIGO S4A programming Bricks
