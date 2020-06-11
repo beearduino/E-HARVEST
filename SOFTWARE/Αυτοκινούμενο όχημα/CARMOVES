@@ -1,0 +1,194 @@
+
+#define IN1  13 //mple
+#define IN2  12 //prasino
+#define IN3  9 // kitrino
+#define IN4  8 // portokali
+#define koumpi 5
+#define trigRPin 2
+#define echoRPin 1
+#define trigAvlakiPin 4 
+#define echoAvlakiPin 3
+
+#define APOSTASI 20
+int AgrotisMprostaPin = 7; 
+int LED = 6;// 
+int AgrotisMprosta = HIGH;  
+float xronos;
+int eythia =0;
+int posesforeseythia ;
+int object = HIGH;
+int Strivo = HIGH;
+int avlaki = 0;
+int VlepoAvlaki =0;
+int AvlakiAgroti = 3;
+int mesastoavlaki =0;
+
+void setup() {
+  pinMode(AgrotisMprostaPin, INPUT);
+  Serial.begin(9600);  
+  avlaki = 0;
+  VlepoAvlaki = readAvlaki();
+  mesastoavlaki =0;
+  posesforeseythia =0;
+  pinMode(IN1, OUTPUT); 
+  pinMode(IN2, OUTPUT); 
+  pinMode(IN3, OUTPUT); 
+  pinMode(IN4, OUTPUT); 
+  pinMode(LED, OUTPUT);
+  pinMode(trigRPin, OUTPUT);
+  pinMode(echoRPin, INPUT);
+  Serial.println("-------Ready");
+}
+
+void loop() {
+  elegxosagroti();
+  if (avlaki == AvlakiAgroti) {
+    StripseAristera();
+  }
+}
+
+void elegxosagroti() {
+  Serial.println("elegxos agroti");
+  Serial.println("vlepo aylaki ");
+  Serial.println(VlepoAvlaki);
+  object = digitalRead(AgrotisMprostaPin);
+  Strivo = readAvlaki();
+  Serial.println("strivo");
+  Serial.println(Strivo);
+  if (Strivo == 0 ) { 
+    Serial.println(" metrao"); 
+    avlaki++;
+    Serial.println(avlaki);
+    Serial.println("strivo");
+    Serial.println(Strivo);
+  }
+  if (object == LOW)   {
+    Serial.println(" A G R O T I S");
+    digitalWrite(LED, HIGH);
+    delay(100);
+    motorStop();
+  }
+  else {
+    Serial.println(" C L A R O"); 
+    digitalWrite(LED, HIGH);
+    delay(100);
+    digitalWrite(LED, LOW);
+    delay(150);
+    proxora();
+  }
+}
+
+void motorForward() {
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);  
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW); 
+}
+
+void motorStop() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);  
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, LOW); 
+}
+double currentTime1 = 0;
+double lastTime1 = 0;
+double getLastTime(){
+return currentTime1 = millis()/1000.0 - lastTime1;
+}
+
+void proxora() {
+  Serial.println("proxora ");
+  int right  = readDistanceRight();
+  if (right > APOSTASI && right < 30) {eythia=0;}
+  if (right >30 ) { eythia=-1;}
+  if (right <20 ) { eythia=1;}
+  Serial.print("eythia = ");
+  Serial.println(eythia);
+  if (eythia > 0) {   
+    posesforeseythia++;
+    if (posesforeseythia >2) { 
+      posesforeseythia=0; 
+      Serial.println("stripse aristera");
+      digitalWrite(IN1, LOW); //STRIPSE ARISTERA
+      digitalWrite(IN2, LOW);  
+      digitalWrite(IN3, HIGH);
+      digitalWrite(IN4, LOW); 
+      delay(60);
+      } 
+    else {
+      motorForward();
+      delay(50);
+      motorStop();
+    }
+  }
+  if (eythia < 0) { 
+    posesforeseythia++;
+      if (posesforeseythia >2) { 
+        posesforeseythia=0;
+        Serial.println("stripse deksia");
+        digitalWrite(IN1, HIGH);//ΣΤΡΙΨΕ ΔΕΞΙΑ
+        digitalWrite(IN2, LOW);  
+        digitalWrite(IN3, LOW);
+        digitalWrite(IN4, LOW);
+        delay(60);
+     } 
+     else {
+      motorForward();
+      delay(50);
+      motorStop();
+     }
+  }
+  if (eythia == 0) {
+    posesforeseythia=0;
+    Serial.println("pane isa");
+    motorForward(); //PANE ISA!
+  }
+}
+
+int readDistanceRight () {
+  long duration, distance;
+  digitalWrite(trigRPin, LOW);  
+  delayMicroseconds(2); 
+  digitalWrite(trigRPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigRPin, LOW);
+  duration = pulseIn(echoRPin, HIGH);
+  distance = (duration/2) / 29.1;
+  Serial.print("deksios=");
+  Serial.println(distance);
+  delay(100);
+  return distance;
+}
+
+int readAvlaki () {
+  long duration, distance;
+  digitalWrite(trigAvlakiPin, LOW);  // Added this line
+  delayMicroseconds(2); // Added this line
+  digitalWrite(trigAvlakiPin, HIGH);
+  delayMicroseconds(10); // Added this line
+  digitalWrite(trigAvlakiPin, LOW);
+  duration = pulseIn(echoAvlakiPin, HIGH);
+  distance = (duration/2) / 29.1;
+  Serial.print("distance ");
+  Serial.println(avlaki);
+  delay(20);
+  if (distance >15) {
+    mesastoavlaki=1;
+  }
+  else {
+    mesastoavlaki=0;
+  }
+  if (mesastoavlaki == 0) {return 0;}
+  if (mesastoavlaki == 1) {return 1;}
+}
+
+void StripseAristera(){
+  digitalWrite(IN1, LOW); //STRIPSE ARISTERA
+  digitalWrite(IN2, LOW);  
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW); 
+  delay(500);
+}
+ 
+ 
