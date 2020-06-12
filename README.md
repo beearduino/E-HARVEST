@@ -39,6 +39,6 @@
 4. L298N Dual H-Bridge Motor Driver 
 5. GIGO S4A programming Bricks
 6. Μπαταρίες 9V
-**7.** Μακετόχαρτο
-**8.** Χρώματα
+7. Μακετόχαρτο
+8. Χρώματα
 
